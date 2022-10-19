@@ -14,66 +14,93 @@ EventList *CreateEventList(void)
 
 void DestroyEventList(EventList *this)
 {
-    
+    free(this);
 }
 
 Event *SearchEvent(EventList *this, char *name)
 {
+    Event *found = this->head;
+        if (this->isEmpty == 0)
+        {
+           while (found != NULL)
+          {
+              if (strcmp(name, found->eventName)==0)
+              return found;
+              found = found->next;
+          }
+        }
+     found = NULL;
+     return found;
 }
 
 void AddEvent(EventList *this, Event *event) // funcional
 {
+      Event *agrega = this->head;
+
     if (this->isEmpty == 1)
     {
         this->isEmpty = 0;
         this->head = event;
+        this->head->next = NULL;
         this->last = event;
         this->last->next = NULL;
     }
     else
     {
+        while (agrega != NULL)
+        {
+            if (strcmp(agrega->eventName, event->eventName) == 0)
+            {
+                return;
+                
+            }
+            
+            agrega = agrega->next;
+        }
+
         this->last->next = event;
         this->last = event;
-        this->last->next = NULL;
     }
 }
 
 void RemoveEvent(EventList *this, char *name)
 {
-    Event *ward = this->head;
-    Event *ant;
-    if (this->isEmpty == 0)
+    
+if (this->isEmpty == 0) //Revisión de que la lista no esté vacía, es decir contenga algo
     {
-        if (strcmp(this->head->eventName, name) == 0)
-        {
-            ward = this->head->next;
-            DestroyEvent(this->head);
-        }
-        else
-        {
-            ant = this->head;
-            this->head = this->head->next;
-            while (this->head->next != NULL)
-            {
-                if (strcmp(this->head->eventName, name) == 0)
-                {
-                    ant->next = this->head->next;
-                    DestroyEvent(this->head);
-                }
-                else
-                {
-                    ant = ant->next;
-                    this->head = this->head->next;
-                }
-            }
-        }
-        if (strcmp(this->last->eventName, name) == 0)
-        {
-            ant->next=NULL;
-            DestroyEvent(this->last);
-        }
-        this->head = ward;
+         Event *act = this->head->next;
+         Event *anter = this->head;
+         if(strcmp(name, anter->eventName)==0)
+         {
+              if(anter->next == NULL)
+              {
+                    this->head = NULL;
+                    this->last = NULL;
+                    this->isEmpty = 1;
+                    DestroyEvent(anter);
+              }
+              else
+              {
+                    this->head=act;
+                    DestroyEvent(anter);
+              }
+         } 
+         while (act != NULL)
+         {
+              if(strcmp(name, act->eventName)==0)
+              {
+                   anter->next = act->next;
+                   if (this->last->next == NULL)
+                   {
+                        this->last = anter;
+                        DestroyEvent(act);
+                   }
+              }
+              anter = act;
+              act = act->next;
+         }
     }
+
 }
 
 void ListEvents(EventList *this) // Funcional
@@ -85,63 +112,10 @@ void ListEvents(EventList *this) // Funcional
     }
     else
     {
-        printf("%s\n", this->head->eventName);
-        while (this->head->next != NULL)
+        while (ward != NULL)
         {
-            this->head = this->head->next;
-            printf("%s\n", this->head->eventName);
+            printf("%s\n", ward->eventName);
+            ward=ward->next;
         }
-        this->head = ward;
     }
-
-    /*
-    INTENTO FALLIDO
-    int i = 0;
-    Event *ward;
-
-    if (this->isEmpty == 1)
-    {
-        printf("empty\n");
-    }
-    else
-    {
-        printf("%s\n", this->head->eventName);
-        ward = this->head->next;
-
-        if (ward->next != NULL)
-        {
-            while (i = 0)
-            {
-
-                printf("%s\n", ward->eventName);
-
-                if (ward->next == NULL)
-                {
-                    i = 1;
-                }
-                else
-                {
-                    ward = ward->next;
-                }
-            }
-        }
-    }*/
-
-    /*
-    intento fallido #2
-    while(i!=0)
-        {
-            if((this->head+i)->next==NULL)
-            {
-                i = 0;
-                //printf("a");
-            }
-            else
-            {
-                printf("a");
-                printf("%s\n",(this->head+i)->eventName);
-                i++;
-            }
-
-        }*/
 }
