@@ -29,8 +29,10 @@ Event *SearchEvent(EventList *this, char *name)
               found = found->next;
           }
         }
+    else{
      found = NULL;
      return found;
+    }
 }
 
 void AddEvent(EventList *this, Event *event) // funcional
